@@ -14,9 +14,13 @@ jobs:
         config:
         - name: Windows
           os: windows-latest
-          
+
         - name: macOS
           os: macos-latest
+
+        - name: iOS
+          os: macos-latest
+          target: iOS
 
         - name: Android32
           os: ubuntu-latest
@@ -32,13 +36,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: RelWithDebInfo
+      - name: Build the mod (RelWithDebInfo)
         uses: geode-sdk/build-geode-mod@main
         with:
-          build-config: RelWithDebInfo # [vscode] comment this out (and the line below!) to Release mode
-          export-pdb: true # [vscode] comment this out (and the line above!) to Release mode
+          build-config: RelWithDebInfo
+          export-symbols: true
+          export-pdb: true
+          # bindings: RayDeeUx/bindings
+          # bindings-ref: "GJPathRewardPopup"
           combine: true
-          sdk: nightly
           target: ${{ matrix.config.target }}
 
   package:
