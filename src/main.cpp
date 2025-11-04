@@ -5,11 +5,11 @@ bool moreIconsOnly = true;
 
 $on_mod(Loaded) {
 	enabled = Mod::get()->getSettingValue<bool>("enabled");
-	listenToSettingsChanges<bool>("enabled", [](const bool enabledNew){
+	listenForSettingsChanges<bool>("enabled", [](const bool enabledNew){
 		enabled = enabledNew;
 	});
 	moreIconsOnly = Mod::get()->getSettingValue<bool>("moreIconsOnly");
-	listenToSettingsChanges<bool>("moreIconsOnly", [](const bool moreIconsOnlyNew){
+	listenForSettingsChanges<bool>("moreIconsOnly", [](const bool moreIconsOnlyNew){
 		moreIconsOnly = moreIconsOnlyNew;
 	});
 }
