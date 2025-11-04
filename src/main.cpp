@@ -1,31 +1,31 @@
 #include <Geode/modify/GJItemIcon.hpp>
-#include <Geode/modify/MenuLayer.hpp>
 
 using namespace geode::prelude;
 
-bool calledAlready = false;
-bool moreIcons = false;
+bool enabled = true;
+bool moreIconsOnly = true;
 
-class $modify(MenuLayer) {
-	bool init() {
-		if (!MenuLayer::init()) return false;
+$on_mod(Loaded) {
+	enabled = Mod::get()->getSettingValue<bool>("enabled");
+	listenForSettingChanges<bool>("enabled", [](bool enabledNew) {
+		enabled = enabledNew;
+	});
+	moreIconsOnly = Mod::get()->getSettingValue<bool>("moreIconsOnly");
+	listenForSettingChanges<bool>("moreIconsOnly", [](bool moreIconsOnlyNew) {
+		moreIconsOnly = moreIconsOnlyNew;
+	});
+}
 
-		if (calledAlready) return true;
-		calledAlready = true;
-		moreIcons = Loader::get()->isModLoaded("hiimjustin000.more_icons");
-
-		return true;
-	}
-};
+using namespace geode::prelude;
 
 class $modify(MyGJItemIcon, GJItemIcon) {
 	struct Fields {
 		UnlockType unlockType = UnlockType::Cube;
 	};
 	void scaleGracefully(float dt) {
-		if (!moreIcons) return;
+		if (!enabled) return;
 		if (!m_player) return;
-		if (!this->getParent() || !this->getParent()->getUserObject("hiimjustin000.more_icons/name")) return;
+		if (moreIconsOnly && (!this->getParent() || !this->getParent()->getUserObject("hiimjustin000.more_icons/name"))) return;
 		auto simplePlayerChildSprite = m_player->getChildByType<CCSprite>(0);
 		if (!simplePlayerChildSprite || simplePlayerChildSprite->getChildrenCount() < 4) return;
 		const float originalScale = this->scaleForType(m_fields->unlockType);
@@ -42,11 +42,10 @@ class $modify(MyGJItemIcon, GJItemIcon) {
 				futureScale = this->getContentWidth() / simplePlayerChildSprite->getContentWidth();
 			}
 		}
-		if (futureScale < originalScale) this->setScale(originalScale * futureScale);
+		if ((originalScale * futureScale) < originalScale) this->setScale(originalScale * futureScale);
 	}
 	bool init(UnlockType p0, int p1, cocos2d::ccColor3B p2, cocos2d::ccColor3B p3, bool p4, bool p5, bool p6, cocos2d::ccColor3B p7) {
 		if (!GJItemIcon::init(p0, p1, p2, p3, p4, p5, p6, p7)) return false;
-		if (!moreIcons) return true;
 		m_fields->unlockType = p0;
 		this->scheduleOnce(schedule_selector(MyGJItemIcon::scaleGracefully), .009f);
 		return true;

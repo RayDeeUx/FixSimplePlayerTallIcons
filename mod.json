@@ -19,10 +19,16 @@
 		"community": "https://discord.gg/WqZBYdBWZW",
 		"homepage": "https://discord.com/channels/822510988409831486/1206371881222144020"
 	},
-	"dependencies": {
-		"hiimjustin000.more_icons": {
-			"version": ">=1.14.7",
-			"importance": "required"
+	"settings": {
+		"enabled": {
+			"name": "Enabled",
+			"type": "bool",
+			"default": true
+		},
+		"moreIconsOnly": {
+			"name": "Only Apply to Icons from More Icons",
+			"type": "bool",
+			"default": true
 		}
 	}
 }
