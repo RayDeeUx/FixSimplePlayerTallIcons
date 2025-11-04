@@ -1,5 +1,7 @@
 #include <Geode/modify/GJItemIcon.hpp>
 
+using namespace geode::prelude;
+
 bool enabled = true;
 bool moreIconsOnly = true;
 
